@@ -1,0 +1,44 @@
+.detalle-producto-page {
+  min-height: 80vh;
+  background-color: #f8f9fa;
+}
+
+.detalle-producto-page .card {
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.detalle-producto-page .card-header {
+  background-color: #fff;
+  border-bottom: 2px solid #f0f0f0;
+  font-weight: 600;
+}
+
+.detalle-producto-page strong {
+  color: #495057;
+}
+
+.detalle-producto-page p {
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+.detalle-producto-page .table {
+  margin-bottom: 0;
+}
+
+.detalle-producto-page .table thead {
+  background-color: #f8f9fa;
+}
+
+.detalle-producto-page .sticky-top {
+  position: sticky;
+  z-index: 1;
+}
+
+@media (max-width: 991px) {
+  .detalle-producto-page .sticky-top {
+    position: relative !important;
+    top: 0 !important;
+  }
+}

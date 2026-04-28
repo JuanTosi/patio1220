@@ -1,0 +1,30 @@
+.home__destacados {
+  background-color: var(--color-beige-claro);
+  padding-block: var(--section-py);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.home__destacados-titulo {
+  font-family: var(--fuente-titulos);
+  color: var(--color-verde-bosque);
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+.home__destacados-boton .btn {
+  border-radius: 5px;
+  font-weight: 600;
+  padding: 0.6rem 1.6rem;
+  color: var(--color-verde-olivo);
+  background-color: var(--color-beige-claro);
+  border: 2px solid var(--color-verde-olivo);
+  transition: var(--transicion);
+}
+
+.home__destacados-boton .btn:hover {
+  background-color: var(--color-verde-bosque);
+  border-color: var(--color-verde-bosque);
+  color: var(--color-blanco);
+}

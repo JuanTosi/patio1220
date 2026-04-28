@@ -1,0 +1,132 @@
+.offcanvas-body {
+  background-color: #f8f4ed;
+  overflow-y: auto;
+  padding-bottom: 2rem;
+}
+
+.carrito-item {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  transition: all 0.2s ease-in-out;
+}
+
+.carrito-item:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.carrito-item-img {
+  width: 70px !important;
+  height: 90px !important;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 8px;
+  background-color: #f2f2f2;
+}
+
+.nombre-prod {
+  font-size: 0.95rem;
+}
+
+.precio-item {
+  font-size: 0.9rem;
+  color: #2d3436;
+}
+
+.btn-cantidad {
+  width: 28px;
+  height: 28px;
+  line-height: 1;
+  padding: 0;
+  border: none;
+}
+
+.cantidad-input {
+  width: 45px;
+  height: 28px;
+  font-size: 0.9rem;
+}
+
+.btn-eliminar {
+  color: #dc3545 !important;
+  font-size: 0.9rem;
+}
+.btn-eliminar:hover {
+  opacity: 0.8;
+}
+
+.offcanvas-header {
+  background-color: #f8f4ed;
+}
+
+.offcanvas-header button {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: 1.2rem;
+  transition: color 0.25s ease;
+}
+
+.offcanvas-header button:hover {
+  color: var(--color-principal);
+  cursor: pointer;
+}
+
+.volver button {
+  background-color: #fff;
+  color: var(--color-principal, #ca1c73);
+  border: 1.5px solid var(--color-principal, #ca1c73);
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.6rem 1.4rem;
+  line-height: 1.2;
+  transition: all 0.25s ease-in-out;
+  box-shadow: none;
+}
+
+.volver button:hover {
+  background-color: var(--color-principal, #ca1c73);
+  color: #fff;
+  transform: none;
+  box-shadow: none;
+}
+
+.volver button:active {
+  background-color: var(--color-principal, #ca1c73);
+  color: #fff;
+  border-color: var(--color-principal, #ca1c73);
+  transform: none;
+  box-shadow: none;
+}
+
+.volver button:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.carrito-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  padding: 1rem;
+}
+
+.carrito-vacio .btn-volver {
+  background-color: #f8f4ed;
+  color: var(--color-principal, #ca1c73);
+  border: 1.5px solid var(--color-principal, #ca1c73);
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.6rem 1.4rem;
+  line-height: 1.2;
+  transition: all 0.25s ease-in-out;
+}
+
+.carrito-vacio .btn-volver:hover {
+  background-color: var(--color-principal, #ca1c73);
+  color: #fff;
+}

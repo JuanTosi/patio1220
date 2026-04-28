@@ -1,0 +1,310 @@
+:root {
+  --color-principal: var(--color-verde-bosque);
+  --color-acento: var(--color-dorado);
+  --color-verde: var(--color-verde-olivo);
+  --sombra-hover: var(--sombra-suave);
+}
+
+.cards-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 10px;
+  overflow-x: hidden;
+}
+
+@media (max-width: 992px) {
+  .cards-container {
+    width: 95%;
+  }
+}
+
+.producto-card {
+  border: 1px solid var(--color-borde);
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--color-beige);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.5s ease;
+}
+
+.producto-card.sin-stock {
+  position: relative;
+}
+
+.producto-card.sin-stock img {
+  position: relative;
+  opacity: 0.8;
+}
+
+.producto-card.sin-stock::before {
+  content: "SIN STOCK";
+  position: absolute;
+  top: 18%;
+  left: -30%;
+  right: -30%;
+  text-align: center;
+  background-color: var(--color-verde-bosque);
+  color: var(--color-beige-claro);
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 9px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  z-index: 20;
+  backdrop-filter: blur(5px);
+  transform: rotate(-25deg);
+}
+
+.card-img-top {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 0;
+  transition: transform 0.3s ease;
+}
+
+.nombre-producto {
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.4rem;
+  color: var(--color-texto);
+  text-align: center;
+  display: -webkit-box;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: calc(1.4rem * 2);
+  margin-top: 0.5rem;
+  margin-bottom: 0.4rem;
+}
+
+.precio-producto {
+  margin-top: 0.15rem;
+  margin-bottom: 0.45rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-verde-olivo);
+}
+
+.stock-producto {
+  font-size: 0.85rem;
+  color: var(--color-gris-medio);
+}
+
+.cantidad-container {
+  width: 100%;
+  max-width: 190px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 5px;
+  border: 1px solid var(--color-borde);
+  background-color: var(--color-blanco);
+  overflow: hidden;
+}
+
+.cantidad-container .btn {
+  width: 45px;
+  height: 100%;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-gris-medio);
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.cantidad-container .btn:hover:not(:disabled) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.cantidad-container .btn:disabled {
+  cursor: not-allowed;
+  color: #bbb;
+}
+
+.cantidad-input {
+  flex: 1;
+  height: 100%;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.95rem;
+  background: transparent;
+  border: none !important;
+  border-left: 1px solid var(--color-borde) !important;
+  border-right: 1px solid var(--color-borde) !important;
+  border-top: none !important;
+  border-bottom: none !important;
+  border-radius: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.cantidad-input::-webkit-outer-spin-button,
+.cantidad-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.cantidad-input:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.espacio-reservado-select,
+.select-tamanios {
+  width: 100%;
+  max-width: 190px;
+  height: 40px;
+}
+
+.select-tamanios {
+  border-radius: 40px;
+  border: 1px solid var(--color-borde);
+  background-color: var(--color-blanco);
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  appearance: none;
+  transition: border-color 0.2s ease;
+  margin-bottom: 6px;
+}
+
+.select-tamanios:hover {
+  border-color: var(--color-verde-bosque);
+}
+
+.select-tamanios:focus,
+.select-tamanios:focus-visible,
+.select-tamanios:active {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: var(--color-verde-bosque) !important;
+}
+
+.espacio-reservado-select {
+  display: block;
+}
+
+.btn-agregar {
+  width: 80%;
+  max-width: 190px;
+  height: 40px;
+  border: 1px solid var(--color-verde-bosque) !important;
+  color: var(--color-verde-bosque);
+  background: transparent;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease;
+  margin-bottom: 10px;
+}
+
+.btn-agregar:hover {
+  background-color: var(--color-verde-bosque);
+  color: var(--color-blanco);
+}
+
+.btn-agregar:focus,
+.btn-agregar:active {
+  outline: none !important;
+  box-shadow: none !important;
+  transform: scale(0.98);
+}
+
+.no-resultados {
+  text-align: center;
+  padding: 3rem;
+  background-color: var(--color-beige-claro);
+  border-radius: 12px;
+  border: 1px solid var(--color-borde);
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.no-resultados h5 {
+  color: var(--color-verde-bosque);
+  font-weight: 600;
+}
+
+.no-resultados p {
+  color: var(--color-gris-medio);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.producto-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 0.75rem 1rem !important;
+}
+
+.zona-superior-flex {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.zona-inferior {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: auto;
+}
+
+@media (max-width: 576px) {
+  .card-img-top {
+    aspect-ratio: 1 / 1;
+  }
+
+  .botones-cards {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn-agregar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .producto-card:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}

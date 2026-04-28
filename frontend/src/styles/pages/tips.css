@@ -1,0 +1,258 @@
+.tipsPro {
+  background:
+    radial-gradient(1200px 600px at 10% 0%, rgba(0, 0, 0, 0.04), transparent),
+    radial-gradient(900px 500px at 90% 10%, rgba(0, 0, 0, 0.04), transparent);
+  background-color: var(--color-beige-claro);
+}
+
+.tipsPro__card {
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.tipsPro__media {
+  height: 420px;
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  isolation: isolate;
+}
+
+.tipsPro__shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.75) 0%,
+    rgba(0, 0, 0, 0.35) 25%,
+    rgba(0, 0, 0, 0) 90%
+  );
+  z-index: 1;
+}
+
+.tipsPro__titleFixed {
+  position: absolute;
+  left: 18px;
+  bottom: 20px;
+  z-index: 6;
+  margin: 0;
+
+  color: var(--color-dorado);
+  font-weight: 950;
+  font-size: 2.25rem;
+  letter-spacing: -0.2px;
+  max-width: 70%;
+  line-height: 1.2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+}
+
+.tipsPro__panel {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  height: 65%;
+  padding: 14px 14px 70px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.82) 10%,
+    rgba(0, 0, 0, 0.55) 50%,
+    rgba(0, 0, 0, 0.18) 75%,
+    rgba(0, 0, 0, 0) 100%
+  );
+
+  transform: translateY(105%);
+  opacity: 0;
+  transition:
+    transform 240ms ease,
+    opacity 240ms ease;
+}
+
+.tipsPro__panel.is-open {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.tipsPro__panelBody {
+  margin-top: 12px;
+  height: 100%;
+  overflow: auto;
+  padding: 0 6px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tipsPro__panelBody::-webkit-scrollbar {
+  width: 10px;
+}
+
+.tipsPro__panelBody::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+}
+
+.tipsPro__panelBody::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tipsPro__panelInfo {
+  margin-top: 14px;
+}
+
+.tipsPro__panelLabel {
+  color: var(--color-beige-claro);
+  font-weight: 900;
+  font-size: 0.85rem;
+  letter-spacing: 0.2px;
+  margin-bottom: 8px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.tipsPro__panelInfoText,
+.tipsPro__panelList {
+  color: var(--color-beige-claro);
+  font-size: 0.95rem;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.tipsPro__panelList {
+  list-style: none;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.tipsPro__panelList li {
+  margin-bottom: 8px;
+  list-style: none;
+  padding-left: 0;
+  position: relative;
+  padding-left: 16px;
+  text-align: left;
+}
+
+.tipsPro__panelList li::before {
+  content: "-";
+  position: absolute;
+  left: 0;
+  color: var(--color-beige-claro);
+  font-weight: 600;
+}
+
+.tipsPro__toggleFixed {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 6;
+
+  border: none;
+  background: transparent;
+  padding: 0;
+
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 900;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    opacity 120ms ease,
+    transform 120ms ease;
+}
+
+.tipsPro__toggleFixed:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+@media (min-width: 992px) {
+  .tipsPro__panel {
+    width: 100%;
+  }
+
+  .tipsPro__panelBody {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tipsPro__panelInfo {
+    width: 55%;
+    margin-top: 0;
+  }
+  .tipsPro__panelBody {
+    position: relative;
+  }
+
+  .tipsPro__panelBody::after {
+    content: "";
+    position: sticky;
+    bottom: 0;
+    display: block;
+    height: 40px;
+    margin-top: -40px;
+    pointer-events: none;
+    z-index: 10;
+
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.55)
+    );
+  }
+
+  .tipsPro__panel.is-open {
+    bottom: 10px;
+  }
+}
+
+@media (max-width: 575px) {
+  .tipsPro__media {
+    height: 440px;
+  }
+
+  .tipsPro__panel {
+    height: 70%;
+    padding-bottom: 70px;
+  }
+
+  .tipsPro__panel.is-open {
+    height: 80%;
+    padding-top: 70px;
+  }
+
+  .tipsPro__titleFixed {
+    top: 15px;
+    left: 20px;
+    max-width: 90%;
+  }
+
+  .tipsPro__toggleFixed {
+    bottom: 20px;
+    right: 25px;
+  }
+
+  .tipsPro__panelBody {
+    position: relative;
+  }
+
+  .tipsPro__panelBody::after {
+    content: "";
+    position: sticky;
+    bottom: 0;
+    display: block;
+    height: 40px;
+    margin-top: -40px;
+    pointer-events: none;
+    z-index: 10;
+
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0),
+      rgba(0, 0, 0, 0.55)
+    );
+  }
+}

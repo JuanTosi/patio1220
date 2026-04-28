@@ -1,0 +1,44 @@
+.detalle-reserva-page {
+  min-height: 80vh;
+  background-color: #f8f9fa;
+}
+
+.detalle-reserva-page .card {
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.detalle-reserva-page .card-header {
+  background-color: #fff;
+  border-bottom: 2px solid #f0f0f0;
+  font-weight: 600;
+}
+
+.detalle-reserva-page strong {
+  color: #495057;
+}
+
+.detalle-reserva-page p {
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+.detalle-reserva-page .table {
+  margin-bottom: 0;
+}
+
+.detalle-reserva-page .table thead {
+  background-color: #f8f9fa;
+}
+
+.detalle-reserva-page .sticky-top {
+  position: sticky;
+  z-index: 1;
+}
+
+@media (max-width: 991px) {
+  .detalle-reserva-page .sticky-top {
+    position: relative !important;
+    top: 0 !important;
+  }
+}

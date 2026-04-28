@@ -1,0 +1,151 @@
+.servicio-section {
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.servicio-title {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  color: #2d4a3a;
+}
+
+.servicio-subtitle {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 40px;
+}
+
+.servicio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+}
+
+.servicio-card-no-link {
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+  cursor: default;
+  padding-bottom: 10px;
+}
+
+.servicio-card-no-link:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.15);
+}
+
+.servicio-img {
+  width: 100%;
+  height: 230px;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+}
+
+.servicio-overlay {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.25);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.servicio-titulo {
+  font-size: 1.7rem;
+  margin: 15px 0 5px;
+  color: #2d4a3a;
+}
+
+.servicio-descripcion {
+  font-size: 1.15rem;
+  padding: 0 20px 25px;
+  color: #444;
+  line-height: 1.5;
+}
+
+.servicio-turno {
+  margin-top: 60px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.servicio-turno-img {
+  width: 100%;
+  height: 260px;
+  border-radius: 14px;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.servicio-turno:hover .servicio-turno-img {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.15);
+}
+
+.servicio-turno-titulo {
+  font-size: 2rem;
+  margin-top: 20px;
+  color: #2d4a3a;
+}
+
+.servicio-turno-descripcion {
+  font-size: 1.25rem;
+  color: #555;
+  margin-top: 5px;
+}
+
+@media (max-width: 600px) {
+  .servicio-img {
+    height: 180px;
+  }
+
+  .servicio-titulo {
+    font-size: 1.4rem;
+  }
+
+  .servicio-descripcion {
+    font-size: 1rem;
+  }
+
+  .servicio-turno-img {
+    height: 200px;
+  }
+
+  .servicio-turno-titulo {
+    font-size: 1.6rem;
+  }
+
+  .servicio-turno-descripcion {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 770px) and (max-width: 1300px) {
+  .servicio-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .servicio-img {
+    height: 250px;
+  }
+
+  .servicio-titulo {
+    font-size: 1.8rem;
+  }
+
+  .servicio-descripcion {
+    font-size: 1.2rem;
+  }
+}

@@ -1,0 +1,40 @@
+.home__visitanos {
+  background-color: var(--color-verde-bosque);
+  color: var(--color-blanco);
+  padding-block: var(--section-py);
+}
+
+.home__visitanos-titulo {
+  font-family: var(--fuente-titulos);
+  color: var(--color-dorado);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.home__visitanos-texto {
+  color: var(--color-beige);
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto 2rem;
+}
+
+.home__visitanos-boton {
+  background-color: var(--color-dorado);
+  color: var(--color-verde-bosque);
+  font-weight: 600;
+  border: none;
+  border-radius: 5px;
+  padding: 0.8rem 1.8rem;
+  cursor: pointer;
+  transition: var(--transicion);
+}
+
+.home__visitanos-boton:hover {
+  opacity: 0.85;
+}
+
+.home__visitanos-boton .whatsapp-icon {
+  margin-left: 8px;
+  font-size: 1.4rem;
+  vertical-align: middle;
+}

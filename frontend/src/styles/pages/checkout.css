@@ -1,0 +1,135 @@
+.checkout-page {
+  min-height: 80vh;
+  background-color: #f8f9fa;
+  padding: 2rem 0;
+}
+
+.checkout-title {
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.checkout-card.sticky-top {
+  top: 80px;
+  z-index: 1;
+}
+
+.checkout-item {
+  padding: 1rem;
+}
+
+.checkout-item h6 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.seccion-direccion,
+.seccion-pago {
+  padding: 0.5rem 0;
+}
+
+.direcciones-list,
+.metodos-pago-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.direccion-card,
+.metodo-pago-card {
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.direccion-card:hover,
+.metodo-pago-card:hover {
+  border-color: #28a745;
+  background-color: #f8fff9;
+}
+
+.direccion-card.selected,
+.metodo-pago-card.selected {
+  border-color: #28a745;
+  background-color: #e8f5e9;
+}
+
+.direccion-card .form-check,
+.metodo-pago-card .form-check {
+  margin: 0;
+}
+
+.direccion-card label,
+.metodo-pago-card label {
+  cursor: pointer;
+  width: 100%;
+}
+
+.nueva-direccion-form {
+  background-color: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.checkout-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.checkout-actions button {
+  flex: 1;
+}
+
+@media (max-width: 991px) {
+  .checkout-card.sticky-top {
+    position: relative !important;
+    top: 0 !important;
+  }
+
+  .checkout-actions {
+    flex-direction: column;
+  }
+}
+
+.seccion-tipo-entrega {
+  padding: 0.5rem 0;
+}
+
+.tipos-entrega-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tipo-entrega-card {
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tipo-entrega-card:hover {
+  border-color: #28a745;
+  background-color: #f8fff9;
+}
+
+.tipo-entrega-card.selected {
+  border-color: #28a745;
+  background-color: #e8f5e9;
+}
+
+.tipo-entrega-card .form-check {
+  margin: 0;
+}
+
+.tipo-entrega-card label {
+  cursor: pointer;
+  width: 100%;
+}
