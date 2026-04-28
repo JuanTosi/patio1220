@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Form, FormGroup, Spinner } from "react-bootstrap";
-import "../../styles/components/AutocompleteInput.css";
+import "../../styles/components/autocompleteInput.css";
 
 const AutocompleteInput = ({
   value,
