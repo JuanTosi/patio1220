@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Alert } from "react-bootstrap";
 import { useAuthStore } from "../../store/authStore.js";
-import "../../styles/pages/MiPerfil.css";
+import "../../styles/pages/miPerfil.css";
 import CardDatosUsuario from "../../components/profile/CardDatosUsuario.jsx";
 import CardModificarPassword from "../../components/profile/CardModificarPassword.jsx";
 import CardDirecciones from "../../components/profile/CardDirecciones";
