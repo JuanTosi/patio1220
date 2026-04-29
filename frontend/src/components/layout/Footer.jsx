@@ -25,7 +25,7 @@ const Footer = () => {
                     <h3>Seguinos</h3>
                     <div className="social-icons">
                         <a href="https://www.instagram.com/patio.1220/" aria-label="Instagram" target="blank"><FaInstagram /></a>
-                        <a href="https://www.facebook.com/people/Patio-1220/100083043053405/?locale=hi_IN" aria-label="Facebook" target="blank"><FaFacebook /></a>
+                        <a href="https://www.facebook.com/people/Patio-1220/100083043053405/" aria-label="Facebook" target="blank"><FaFacebook /></a>
                         <a href="" aria-label="Whatsapp"><FaWhatsapp /></a>
                     </div>
                 </div>

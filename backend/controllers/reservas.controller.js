@@ -48,10 +48,8 @@ export const obtenerMisReservas = async (req, res) => {
     WHERE idReserva IN (?)
   `;
 
-  try {
-    const conn = connection.promise();
-    
-    const [reservas] = await conn.query(queryReservas, [idUsuario]);
+  try {    
+    const [reservas] = await connection.promise().query(queryReservas, [idUsuario]);
 
     if (reservas.length === 0) {
       return res.status(200).json([]);
@@ -59,7 +57,7 @@ export const obtenerMisReservas = async (req, res) => {
 
     const idsReservas = reservas.map(r => r.idReserva);
 
-    const [detalles] = await conn.query(queryDetalle, [idsReservas]);
+    const [detalles] = await connection.promise().query(queryDetalle, [idsReservas]);
 
     const reservasConProductos = reservas.map(reserva => ({
       ...reserva,
@@ -74,7 +72,7 @@ export const obtenerMisReservas = async (req, res) => {
 };
 
 // GET - Obtener detalle completo de una reserva (usuario logeado)
-export const obtenerDetalleReserva = (req, res) => {
+export const obtenerDetalleReserva = async (req, res) => {
   const idUsuario = req.user?.idUsuario;
   const { id } = req.params;
 
@@ -113,11 +111,21 @@ export const obtenerDetalleReserva = (req, res) => {
     WHERE r.idReserva = ? AND r.idUsuario = ?
   `;
 
-  connection.query(queryReserva, [id, idUsuario], (error, reservaResults) => {
-    if (error) {
-      console.error("Error al obtener reserva:", error);
-      return res.status(500).json({ error: error.message });
-    }
+  const queryDetalle = `
+    SELECT 
+      dr.idDetalle,
+      dr.nombreProducto,
+      dr.nombreTamanio,
+      dr.dimension,
+      dr.cantidad,
+      dr.precioUnitario,
+      dr.subtotal
+    FROM detalle_reservas dr
+    WHERE dr.idReserva = ?
+  `;
+
+  try {
+    const [reservaResults] = await connection.promise().query(queryReserva, [id, idUsuario]);
 
     if (!reservaResults.length) {
       return res.status(404).json({ error: "Reserva no encontrada" });
@@ -125,31 +133,14 @@ export const obtenerDetalleReserva = (req, res) => {
 
     const reserva = reservaResults[0];
 
-    const queryDetalle = `
-      SELECT 
-        dr.idDetalle,
-        dr.nombreProducto,
-        dr.nombreTamanio,
-        dr.dimension,
-        dr.cantidad,
-        dr.precioUnitario,
-        dr.subtotal
-      FROM detalle_reservas dr
-      WHERE dr.idReserva = ?
-    `;
+    const [detalleResults] = await connection.promise().query(queryDetalle, [id]);
 
-    connection.query(queryDetalle, [id], (err, detalleResults) => {
-      if (err) {
-        console.error("Error al obtener detalle de reserva:", err);
-        return res.status(500).json({ error: err.message });
-      }
+    res.status(200).json({ ...reserva, productos: detalleResults });
 
-      res.status(200).json({
-        ...reserva,
-        productos: detalleResults
-      });
-    });
-  });
+  } catch (error) {
+    console.error("Error  al obtener el detalle de reserva", error);
+    res.status(500).json({ error: error.message });
+  }
 };
 
 // POST - Crear nueva reserva 
@@ -176,7 +167,7 @@ export const crearReserva = async (req, res) => {
     return res.status(400).json({ error: "La reserva debe tener al menos un producto" });
   }
 
-  const conn = connection.promise();
+  const conn = await connection.promise().getConnection();
 
   try {
     await conn.beginTransaction();
@@ -315,20 +306,18 @@ export const crearReserva = async (req, res) => {
     await conn.commit();
 
     try {
-  await enviarEmailReserva(
-    emailCliente,                // email del usuario
-    nombreCliente,               // nombre
-    idReserva,                   // ID recién generado por MySQL
-    productosValidados,          // array con nombre, cantidad y precio de cada item
-    totalReserva,                // total calculado en el controller
-    tipoEntrega,                 // "retiro_local" o "envio_domicilio"
-    req.body.metodoPago || ""    // nombre del método (si lo mandás desde el frontend)
-  );
-} catch (emailError) {
-  // Si el mail falla, lo logueamos pero NO interrumpimos la respuesta
-  console.error("Reserva creada OK, pero falló el email:", emailError.message);
-}
-
+      await enviarEmailReserva(
+      emailCliente,
+      nombreCliente,
+      idReserva,
+      productosValidados,
+      totalReserva,
+      tipoEntrega,
+      req.body.metodoPago || ""
+      );
+    } catch (emailError) {
+      console.error("Reserva creada OK, pero falló el email:", emailError.message);
+    }
 
     res.status(201).json({
       success: true,
@@ -340,6 +329,8 @@ export const crearReserva = async (req, res) => {
     await conn.rollback();
     console.error("Error al crear reserva:", error);
     res.status(500).json({ error: error.message });
+  } finally {
+    conn.release();
   }
 };
 
@@ -352,17 +343,16 @@ export const cancelarReserva = async (req, res) => {
     return res.status(401).json({ error: "No autenticado" });
   }
 
-  const conn = connection.promise();
+  const conn = await connection.promise().getConnection();
 
   try {
     await conn.beginTransaction();
 
-    // Obtener la reserva
     const [reserva] = await conn.query(
       `SELECT r.idReserva, r.idEstado, e.nombreEstado 
-       FROM reservas r
-       JOIN estados_reserva e ON r.idEstado = e.idEstado
-       WHERE r.idReserva = ? AND r.idUsuario = ?`,
+        FROM reservas r
+        JOIN estados_reserva e ON r.idEstado = e.idEstado
+        WHERE r.idReserva = ? AND r.idUsuario = ?`,
       [id, idUsuario]
     );
 
@@ -416,11 +406,13 @@ export const cancelarReserva = async (req, res) => {
     await conn.rollback();
     console.error("Error al cancelar reserva:", error);
     res.status(500).json({ error: error.message });
+  } finally {
+    conn.release();
   }
 };
 
 // GET - Obtener todas las reservas ADMIN
-export const obtenerTodasLasReservas = (req, res) => {
+export const obtenerTodasLasReservas = async (req, res) => {
   const query = `
     SELECT 
       r.idReserva,
@@ -446,13 +438,13 @@ export const obtenerTodasLasReservas = (req, res) => {
     ORDER BY r.fechaReserva DESC
   `;
 
-  connection.query(query, (error, results) => {
-    if (error) {
-      console.error("Error al obtener reservas:", error);
-      return res.status(500).json({ error: error.message });
-    }
-    res.status(200).json(results);
-  });
+  try {
+    const [reservas] = await connection.promise().query(query);
+    res.status(200).json(reservas);
+  } catch (error) {
+    console.error("Error al obtener las reservas", error);
+    res.status(500).json({ error: error.message })
+  }
 };
 
 // GET - Obtener detalle de una reserva por ID ADMIN
@@ -529,6 +521,7 @@ export const obtenerReservaPorId = async (req, res) => {
 
 // PATCH - Cambiar estado de una reserva ADMIN
 export const cambiarEstadoReserva = async (req, res) => {
+
   const { id } = req.params;
   const { idEstado: nuevoEstado } = req.body;
 
@@ -538,9 +531,11 @@ export const cambiarEstadoReserva = async (req, res) => {
 
   const ESTADOS_FINALES = [5, 6];
   const ID_CANCELADA = 6;
+  const conn = await connection.promise().getConnection();
 
   try {
-    const conn = connection.promise();
+
+    await conn.beginTransaction();
 
     const [reservas] = await conn.query(
       "SELECT idEstado FROM reservas WHERE idReserva = ?",
@@ -548,17 +543,17 @@ export const cambiarEstadoReserva = async (req, res) => {
     );
 
     if (reservas.length === 0) {
-      return res.status(404).json({ error: "Reserva no encontrada" });
+      throw { status: 404, error: "Reserva no encontrada"}
     }
 
     const estadoActual = reservas[0].idEstado;
 
     if (ESTADOS_FINALES.includes(estadoActual)) {
-      return res.status(400).json({ error: "Esta reserva no puede cambiar de estado." });
+      throw { status: 400, error: "Esta reserva no puede cambiar de estado"};
     }
 
     if (parseInt(nuevoEstado) !== ID_CANCELADA && parseInt(nuevoEstado) <= estadoActual) {
-      return res.status(400).json({ error: "Transición de estado no permitida. La reserva solo puede avanzar." });
+      throw { status: 400, error: "Trancisión de estado no permitida.la reserva solo puede avanzar."};
     }
 
     await conn.query(
@@ -566,36 +561,67 @@ export const cambiarEstadoReserva = async (req, res) => {
       [nuevoEstado, id]
     );
 
+    if (parseInt(nuevoEstado) === ID_CANCELADA) {
+      const [productos] = await conn.query(
+        "SELECT idProducto, idTamanio, cantidad FROM detalle_reservas WHERE idReserva = ?",
+        [id]
+      );
+
+      for (const prod of productos) {
+        if (prod.idTamanio) {
+          await conn.query(
+            "UPDATE producto_tamanio SET stock = stock + ? WHERE idProducto = ? AND idTamanio = ?",
+            [prod.cantidad, prod.idProducto, prod.idTamanio]
+          );
+        } else {
+          await conn.query(
+            "UPDATE producto_tamanio SET stock = stock + ? WHERE idProducto = ?",
+            [prod.cantidad, prod.idProducto]
+          );
+        }
+      }
+    }
+
+    await conn.commit();
     res.status(200).json({ success: true });
+
   } catch (error) {
-    console.error("Error al cambiar estado de reserva:", error);
-    res.status(500).json({ error: error.message });
+
+    await conn.rollback();
+    const status = error.status || 500;
+    const message = error.error || error.message || "Error interno";
+    res.status(status).json({ error: message });
+
+  } finally {
+
+    conn.release();
+
   }
 };
 
 // PATCH - Marcar reserva como pagada ADMIN
-export const marcarReservaPagada = (req, res) => {
+export const marcarReservaPagada = async (req, res) => {
   const { id } = req.params;
   const { pagado } = req.body;
 
   const query = "UPDATE reservas SET pagado = ? WHERE idReserva = ?";
 
-  connection.query(query, [pagado ? 1 : 0, id], (error, results) => {
-    if (error) {
-      console.error("Error al marcar reserva como pagada:", error);
-      return res.status(500).json({ error: error.message });
-    }
+  try {
+    const [reservaPagada] = await connection.promise().query(query, [pagado ? 1 : 0, id]);
 
-    if (results.affectedRows === 0) {
+    if (reservaPagada.affectedRows === 0 ) {
       return res.status(404).json({ error: "Reserva no encontrada" });
     }
 
-    res.status(200).json({ success: true });
-  });
+    return res.status(200).json({success: true});
+
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
 };
 
 // GET - Obtener estadísticas de reservas ADMIN
-export const obtenerEstadisticasReservas = (req, res) => {
+export const obtenerEstadisticasReservas = async (req, res) => {
   const queries = {
     totalReservas: "SELECT COUNT(*) as total FROM reservas",
     totalVentas: "SELECT SUM(totalReserva) as total FROM reservas WHERE pagado = 1",
@@ -613,27 +639,23 @@ export const obtenerEstadisticasReservas = (req, res) => {
     `
   };
 
-  const resultados = {};
-  let completadas = 0;
+  try {
+    const [[totalReservas],[totalVentas],[reservasPendientes],[reservasPorEstado]] = await Promise.all([
+      connection.promise().query(queries.totalReservas),
+      connection.promise().query(queries.totalVentas),
+      connection.promise().query(queries.reservasPendientes),
+      connection.promise().query(queries.reservasPorEstado)
+    ]);
 
-  Object.keys(queries).forEach((key) => {
-    connection.query(queries[key], (error, results) => {
-      if (error) {
-        console.error(`Error en query ${key}:`, error);
-        return;
-      }
-
-      resultados[key] = results;
-      completadas++;
-
-      if (completadas === Object.keys(queries).length) {
-        res.status(200).json({
-          totalReservas: resultados.totalReservas[0].total,
-          totalVentas: resultados.totalVentas[0].total || 0,
-          reservasPendientes: resultados.reservasPendientes[0].total,
-          reservasPorEstado: resultados.reservasPorEstado
-        });
-      }
+    res.status(200).json({
+      totalReservas: totalReservas[0].total,
+      totalVentas: totalVentas[0].total || 0,
+      reservasPendientes: reservasPendientes[0].total,
+      reservasPorEstado: reservasPorEstado
     });
-  });
+
+  } catch (error) {
+    console.error("Error al obtener estadísticas", error);
+    res.status(500).json({ error: error.message });
+  }
 };
