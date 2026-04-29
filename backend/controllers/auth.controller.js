@@ -65,8 +65,8 @@ export const registrarUsuario = async (req, res) => {
     return res.status(400).json({ error: "Faltan datos obligatorios" });
   }
 
-   const emailNormalizado = email.toLowerCase().trim();
-   
+  const emailNormalizado = email.toLowerCase().trim();
+  
   const queryCheck = "SELECT idUsuario FROM usuarios WHERE email = ? LIMIT 1";
   connection.query(queryCheck, [emailNormalizado], async (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
@@ -86,21 +86,25 @@ export const registrarUsuario = async (req, res) => {
       connection.query(
         queryInsert,
         [nombre, apellido, emailNormalizado, telefono || null, passwordHash],
-         async (error, results) => {
+        async (error, results) => {
           if (error) {
             console.error("Error al registrar usuario:", error);
             return res.status(500).json({ error: error.message });
           }
-console.log("INSERT exitoso, id:", results.insertId);
+          console.log("INSERT exitoso, id:", results.insertId);
           const nuevoId = results.insertId;
 
           const payload = { sub: nuevoId, rol: "cliente" };
           const token = jwt.sign(payload, process.env.JWT_SECRET, {
             expiresIn: process.env.JWT_EXPIRES_IN || "2h",
           });
- console.log("Llamando a enviarEmailRegistro..."); // ← agregar
-          await enviarEmailRegistro(emailNormalizado, nombre);
- console.log("enviarEmailRegistro terminó"); // ← agregar
+          console.log("Llamando a enviarEmailRegistro...");
+          try {
+            await enviarEmailRegistro(emailNormalizado, nombre);
+            console.log("enviarEmailRegistro terminó");
+          } catch (emailError) {
+            console.error("Registro OK, pero falló el email:", emailError.message);
+          }
           return res.status(201).json({
             token,
             user: {
@@ -132,13 +136,10 @@ export const solicitarRecuperacionPassword = (req, res) => {
 
   const emailNormalizado = email.toLowerCase().trim();
 
-  // buscamos si existe el usuario
   const query = "SELECT idUsuario, nombre FROM usuarios WHERE email = ? LIMIT 1";
   connection.query(query, [emailNormalizado], async (error, results) => {
     if (error) return res.status(500).json({ error: error.message });
 
-    // aunque no exista el email respondemos lo mismo
-    // asi no se puede saber que emails estan o no registrados
     if (results.length === 0) {
       return res.status(200).json({
         message: "Si el email existe, vas a recibir un enlace para recuperar tu contraseña.",
@@ -147,15 +148,10 @@ export const solicitarRecuperacionPassword = (req, res) => {
 
     const user = results[0];
 
-    // generamos un token simple con Date.now() y un numero random
-    // Date.now() nos da el tiempo actual en milisegundos, siempre es unico
     const resetToken = Date.now().toString(36) + Math.random().toString(36).substring(2);
 
-    // el token expira en 1 hora
-    // Date.now() esta en milisegundos, 1000ms = 1s, 60s = 1min, 60min = 1hora
     const resetTokenExpira = new Date(Date.now() + 1000 * 60 * 60);
 
-    // guardamos el token en la DB para verificarlo despues
     const queryUpdate = `
       UPDATE usuarios SET resetToken = ?, resetTokenExpira = ? WHERE idUsuario = ?
     `;
@@ -166,12 +162,13 @@ export const solicitarRecuperacionPassword = (req, res) => {
       async (err) => {
         if (err) return res.status(500).json({ error: err.message });
 
-        // armamos el link que va en el mail
         const link = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
-        // mandamos el mail con el link
-        await enviarRecuperarContrasena(emailNormalizado, link);
-
+        try {
+          await enviarRecuperarContrasena(emailNormalizado, link);
+        } catch (emailError) {
+          console.error("Error enviando email de recuperación:", emailError.message);
+        }
         return res.status(200).json({
           message: "Si el email existe, vas a recibir un enlace para recuperar tu contraseña.",
         });
@@ -188,8 +185,6 @@ export const resetearPassword = async (req, res) => {
     return res.status(400).json({ error: "Token y nueva contraseña son obligatorios" });
   }
 
-  // buscamos el token en la DB y verificamos que no haya expirado
-  // NOW() es una funcion de MySQL que devuelve la fecha y hora actual
   const query = `
     SELECT idUsuario FROM usuarios
     WHERE resetToken = ? AND resetTokenExpira > NOW()
@@ -199,7 +194,6 @@ export const resetearPassword = async (req, res) => {
   connection.query(query, [token], async (error, results) => {
     if (error) return res.status(500).json({ error: error.message });
 
-    // si el token no existe o ya expiro mandamos error
     if (results.length === 0) {
       return res.status(400).json({
         error: "El enlace no es válido o ya expiró. Pedí uno nuevo.",
@@ -209,10 +203,8 @@ export const resetearPassword = async (req, res) => {
     const user = results[0];
 
     try {
-      // hasheamos la nueva password
       const passwordHash = await bcrypt.hash(nuevaPassword, 10);
 
-      // actualizamos la password y borramos el token para que no se pueda usar de nuevo
       const queryUpdate = `
         UPDATE usuarios
         SET passwordHash = ?, resetToken = NULL, resetTokenExpira = NULL
